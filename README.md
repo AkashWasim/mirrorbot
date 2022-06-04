@@ -1,31 +1,14 @@
 # Heroku Deploy
 
-## How This Branch Works
-
-* We all know most of mirror/leech repository is banned from heroku. What heroku ban exactly ?
-  - Heroku ban specific layer from docker and not all docker layers. In this repository heroku banned `COPY` layer that copy all repository files to docker container. So changing `COPY` layer by removing files, suspension will not occure.
-
-* But how to get repository files to run the code ?
-  - We are using update feature that clone the files from `UPSTREAM_REPO` to docker container before bot startup.
-
-* Is there any other way to avoid suspension?
-  - Yes! deploy master branch twice. But how this works ?! When you deploy heroku app with specific name, heroku store docker cache for next time deploy for this app with it's specific name, so docker image will not be downloaded again and again for this app since already downloaded first time unless there is a change in docker layers.
-  - If You have deployed an app for first time and after deploying done, you have deleted the app immediately, what will happen? Heroku will store docker cache and your app will not suspened since app already deleted.
-  - Heroku have issue in this case. When you deploy from same docker with same app name your app will not got suspened. If you are cli user you will notice at layers pushing step that some of layers marked as `layer already exists`.
-
-**Important Notes for Both Branches**
-1. Don't delete .gitignore file.
-2. Read all variables definitions from master branch readme.
-3. Don't edit/add variables from Heroku, if you want to edit/add simply do it in config.env from gists if using gists or from private repository if added in it, then restart your app. You can only add `CONFIG_FILE_URL` variable from heroku.
-4. Keep the programmer inside you away and follow the steps.
-5. Don't deploy from browser or hmanager app, only from cli or workflow.
-
-**Important Notes for Heroku Branch**
-1. This Branch only for DEPLOYING! Don't use it for update!
+**Important Notes**
+1. This branch non-editable.
 2. Generate all your private files from master branch (token.pickle, config.env, drive_folder, cookies.txt ...).
-3. `UPSTREAM_REPO` is required for heroku branch otherwise your bot will not start.
-4. If you want to edit aria.sh or qBittorrent.conf or any other file in repository, edit in your repository that filled for `UPSTREAM_REPO`. For more information read [THIS](https://github.com/anasty17/mirror-leech-telegram-bot/tree/master#upstream-repo-recommended).
-6. If want to add private files before deploying then add them to heroku branch not master branch!.
+3. You can only edit a2c.conf(aria2c) and qBittorrent.conf.
+4. Don't add variables in heroku Environment, you can only add `CONFIG_FILE_URL`.
+5. `BASE_URL_OF_BOT` variable is required to start the bot.
+6. Incase any extra file added or any edit in dockerfile or edit file not mentioned in note `3` your bot will not start.
+7. Shell and Eval commands disabled in this branch.
+8. This branch uses megasdkrest and latest version of qBittorrent.
 
 ------
 
@@ -36,7 +19,7 @@
 git clone https://github.com/anasty17/mirror-leech-telegram-bot mirrorbot/ && cd mirrorbot
 ```
 - Switch to heroku branch
-  - **NOTE**: Don't commit changes in master branch. If you have committed your changes in master branch and after that you switched to heroku branch, the new added files will `NOT` appear in heroku branch. Skip this step if you are deploying master branch.
+  - **NOTE**: Don't commit changes in master branch. If you have committed your changes in master branch and after that you switched to heroku branch, the new added files(private files) will `NOT` appear in heroku branch.
 ```
 git checkout heroku
 ```
@@ -65,12 +48,8 @@ heroku git:remote -a YOURAPPNAME
 heroku stack:set container
 ```
 - Push to heroku
-  - 1st cmd for heroku branch and 2nd for master branch
 ```
 git push heroku heroku:master -f
-```
-```
-git push heroku master -f
 ```
 
 ------
@@ -136,6 +115,6 @@ heroku logs -t
 
 ![Select Manual Deploy](https://telegra.ph/file/cff1c24de42c271b23239.jpg)
 
-5. Choose branch then click on Run workflow
+5. Click on Run workflow
 
 ![Run Workflow](https://telegra.ph/file/f44c7465d58f9f046328b.png)
